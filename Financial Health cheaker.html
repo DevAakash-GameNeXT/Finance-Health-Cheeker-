@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Check your financial health with our neon-themed tool. Input income, expenses, savings, and debt for a personalized score and tips.">
+    <meta name="keywords" content="Financial Health, Money Management, Calculator, Neon Design, Personal Finance">
+    <title>Financial Health Checker by GameNeXT</title>
+    <style>
+        /* General Styles */
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .main-content {
+            grid-column: 2 / 3;
+        }
+
+        /* Header */
+        header h1 {
+            text-align: center;
+            font-size: 2.5em;
+            text-shadow: 0 0 15px #22c55e, 0 0 25px #3b82f6;
+            animation: glowPulse 3s infinite alternate, colorTransition 15s infinite;
+        }
+
+        /* Introduction Section */
+        .introduction {
+            margin-bottom: 40px;
+            text-align: center;
+            border: 2px solid #22c55e;
+            padding: 20px;
+            box-shadow: 0 0 20px #3b82f6;
+            animation: borderColorTransition 15s infinite;
+        }
+        .introduction h2 {
+            font-size: 2em;
+            animation: colorTransition 15s infinite;
+        }
+        .introduction p {
+            font-size: 1.1em;
+            text-shadow: 0 0 5px #22c55e;
+        }
+        .highlight {
+            color: #22c55e;
+            font-weight: bold;
+            animation: colorTransition 15s infinite;
+        }
+
+        /* Calculator Section */
+        form {
+            display: grid;
+            gap: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #3b82f6;
+            animation: borderColorTransition 15s infinite;
+        }
+        label {
+            font-size: 1.2em;
+            text-shadow: 0 0 5px #22c55e;
+            animation: colorTransition 15s infinite;
+        }
+        input[type="number"] {
+            padding: 10px;
+            font-size: 1em;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border: 2px solid #22c55e;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #3b82f6;
+            transition: all 0.3s ease;
+            animation: borderColorTransition 15s infinite;
+        }
+        input[type="number"]:hover,
+        input[type="number"]:focus {
+            box-shadow: 0 0 20px #1e40af;
+            transform: scale(1.02);
+        }
+
+        /* Currency Dropdown */
+        .currency-select {
+            position: relative;
+        }
+        #currency-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border: 2px solid #22c55e;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #3b82f6;
+            transition: all 0.3s ease;
+            animation: buttonColorTransition 15s infinite;
+        }
+        #currency-button:hover {
+            box-shadow: 0 0 20px #1e40af;
+            transform: scale(1.05);
+        }
+        #currency-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #1a1a1a;
+            border: 2px solid #22c55e;
+            border-radius: 5px;
+            box-shadow: 0 0 15px #3b82f6;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            animation: borderColorTransition 15s infinite;
+        }
+        #currency-dropdown.open {
+            max-height: 300px;
+        }
+        #currency-search {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border: none;
+            border-bottom: 1px solid #22c55e;
+            box-shadow: 0 0 5px #3b82f6;
+        }
+        #currency-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        #currency-list li {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, text-shadow 0.3s ease;
+        }
+        #currency-list li:hover {
+            background-color: #2a2a2a;
+            text-shadow: 0 0 10px #1e40af;
+        }
+
+        /* Calculate Button */
+        #calculate-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #22c55e;
+            color: #0f0f0f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #3b82f6;
+            transition: all 0.3s ease;
+            animation: buttonColorTransition 15s infinite;
+        }
+        #calculate-button:hover {
+            box-shadow: 0 0 25px #1e40af;
+            transform: scale(1.05);
+            background-color: #16a34a;
+        }
+
+        /* Results Section */
+        #result {
+            text-align: center;
+            font-size: 1.5em;
+            margin-top: 20px;
+            text-shadow: 0 0 10px #22c55e;
+            animation: colorTransition 15s infinite;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #result.show {
+            opacity: 1;
+        }
+        #progress-container {
+            margin-top: 20px;
+            display: none;
+            animation: borderColorTransition 15s infinite;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #2a2a2a;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+            box-shadow: 0 0 10px #3b82f6;
+        }
+        .progress {
+            height: 20px;
+            background-color: #22c55e;
+            width: 0;
+            transition: width 1s ease-in-out;
+            box-shadow: 0 0 10px #3b82f6;
+        }
+        #tips {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            text-shadow: 0 0 5px #22c55e;
+            animation: colorTransition 15s infinite;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #tips.show {
+            opacity: 1;
+        }
+        #chart-container {
+            margin-top: 20px;
+            height: 300px;
+            display: none;
+            border: 2px solid #22c55e;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #3b82f6;
+            animation: borderColorTransition 15s infinite;
+        }
+
+        /* Ad Space */
+        .ad-space {
+            padding: 20px;
+            border: 2px solid #22c55e;
+            text-align: center;
+            font-size: 1.2em;
+            box-shadow: 0 0 15px #3b82f6;
+            background-color: #1a1a1a;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: box-shadow 0.3s ease;
+            animation: borderColorTransition 15s infinite;
+        }
+        .ad-space:hover {
+            box-shadow: 0 0 25px #1e40af;
+        }
+        .ad-left {
+            grid-column: 1 / 2;
+        }
+        .ad-right {
+            grid-column: 3 / 4;
+        }
+
+        /* Call-to-Action */
+        .cta {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px dashed #22c55e;
+            box-shadow: 0 0 10px #3b82f6;
+            animation: borderColorTransition 15s infinite;
+        }
+        .cta a {
+            color: #22c55e;
+            text-decoration: none;
+            font-weight: bold;
+            animation: colorTransition 15s infinite;
+        }
+        .cta a:hover {
+            text-shadow: 0 0 15px #1e40af;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8em;
+            text-shadow: 0 0 5px #22c55e;
+            grid-column: 1 / 4;
+            animation: colorTransition 15s infinite;
+        }
+
+        /* Unique Background Animations */
+        .bg-animations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .bg-animation {
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #22c55e, 0 0 25px #3b82f6;
+            animation: pulseAndDrift 10s infinite ease-in-out, bgColorTransition 15s infinite;
+        }
+        .bg-animation:nth-child(1) {
+            width: 30px;
+            height: 30px;
+            top: 20%;
+            left: 15%;
+            background: radial-gradient(circle, #22c55e, #3b82f6);
+            animation-duration: 8s;
+        }
+        .bg-animation:nth-child(2) {
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 70%;
+            background: radial-gradient(circle, #3b82f6, #22c55e);
+            animation-duration: 12s;
+            animation-delay: 2s;
+        }
+        .bg-animation:nth-child(3) {
+            width: 25px;
+            height: 25px;
+            top: 80%;
+            left: 40%;
+            background: radial-gradient(circle, #22c55e, #3b82f6);
+            animation-duration: 10s;
+            animation-delay: 4s;
+        }
+
+        /* Animations */
+        @keyframes pulseAndDrift {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+            25% { transform: translate(20vw, 15vh) scale(1.5); opacity: 1; }
+            50% { transform: translate(40vw, -10vh) scale(1); opacity: 0.7; }
+            75% { transform: translate(10vw, 25vh) scale(1.3); opacity: 1; }
+            100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+        }
+        @keyframes glowPulse {
+            0% { text-shadow: 0 0 15px #22c55e, 0 0 25px #3b82f6; }
+            100% { text-shadow: 0 0 20px #16a34a, 0 0 35px #1e40af; }
+        }
+        @keyframes colorTransition {
+            0% { color: #22c55e; text-shadow: 0 0 10px #22c55e; }
+            20% { color: #16a34a; text-shadow: 0 0 10px #16a34a; }
+            40% { color: #3b82f6; text-shadow: 0 0 10px #3b82f6; }
+            60% { color: #1e40af; text-shadow: 0 0 10px #1e40af; }
+            80% { color: #1d4ed8; text-shadow: 0 0 10px #1d4ed8; }
+            100% { color: #22c55e; text-shadow: 0 0 10px #22c55e; }
+        }
+        @keyframes borderColorTransition {
+            0% { border-color: #22c55e; box-shadow: 0 0 15px #22c55e; }
+            20% { border-color: #16a34a; box-shadow: 0 0 15px #16a34a; }
+            40% { border-color: #3b82f6; box-shadow: 0 0 15px #3b82f6; }
+            60% { border-color: #1e40af; box-shadow: 0 0 15px #1e40af; }
+            80% { border-color: #1d4ed8; box-shadow: 0 0 15px #1d4ed8; }
+            100% { border-color: #22c55e; box-shadow: 0 0 15px #22c55e; }
+        }
+        @keyframes buttonColorTransition {
+            0% { background-color: #22c55e; box-shadow: 0 0 15px #22c55e; }
+            20% { background-color: #16a34a; box-shadow: 0 0 15px #16a34a; }
+            40% { background-color: #3b82f6; box-shadow: 0 0 15px #3b82f6; }
+            60% { background-color: #1e40af; box-shadow: 0 0 15px #1e40af; }
+            80% { background-color: #1d4ed8; box-shadow: 0 0 15px #1d4ed8; }
+            100% { background-color: #22c55e; box-shadow: 0 0 15px #22c55e; }
+        }
+        @keyframes bgColorTransition {
+            0% { background: radial-gradient(circle, #22c55e, #3b82f6); }
+            20% { background: radial-gradient(circle, #16a34a, #1e40af); }
+            40% { background: radial-gradient(circle, #3b82f6, #22c55e); }
+            60% { background: radial-gradient(circle, #1e40af, #16a34a); }
+            80% { background: radial-gradient(circle, #1d4ed8, #22c55e); }
+            100% { background: radial-gradient(circle, #22c55e, #3b82f6); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .main-content, .ad-left, .ad-right, footer {
+                grid-column: 1 / 2;
+            }
+            .ad-space {
+                height: 200px;
+                margin: 20px 0;
+            }
+        }
+        @media (max-width: 768px) {
+            header h1 { font-size: 2em; }
+            form { max-width: 100%; }
+            #result, #tips { font-size: 1.2em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animations -->
+    <div class="bg-animations">
+        <div class="bg-animation"></div>
+        <div class="bg-animation"></div>
+        <div class="bg-animation"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Left Ad Space -->
+        <div class="ad-space ad-left">Advertisement Left</div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <header>
+                <h1>Financial Health Checker</h1>
+            </header>
+            <main>
+                <!-- Introduction Section -->
+                <section class="introduction">
+                    <h2>Assess Your Finances</h2>
+                    <p>Get a clear picture of your <span class="highlight">financial health</span> with our neon-inspired tool. Input your metrics for a score and tips!</p>
+                </section>
+                <!-- Calculator Section -->
+                <form id="calculator-form">
+                    <label for="income">Monthly Income</label>
+                    <input type="number" id="income" placeholder="e.g., 5000" step="0.01">
+                    <label for="expenses">Monthly Expenses</label>
+                    <input type="number" id="expenses" placeholder="e.g., 3000" step="0.01">
+                    <label for="savings">Current Savings</label>
+                    <input type="number" id="savings" placeholder="e.g., 10000" step="0.01">
+                    <label for="debt">Total Debt</label>
+                    <input type="number" id="debt" placeholder="e.g., 2000" step="0.01">
+                    <div class="currency-select">
+                        <button type="button" id="currency-button">USD - $</button>
+                        <div id="currency-dropdown">
+                            <input type="text" id="currency-search" placeholder="Search currency">
+                            <ul id="currency-list"></ul>
+                        </div>
+                    </div>
+                    <button type="button" id="calculate-button">Check Health</button>
+                </form>
+                <!-- Results Section -->
+                <div id="result"></div>
+                <div id="progress-container">
+                    <div class="progress-bar">
+                        <div id="health-progress" class="progress"></div>
+                    </div>
+                    <p id="progress-label" style="text-align: center;"></p>
+                </div>
+                <div id="chart-container">
+                    <canvas id="health-chart"></canvas>
+                </div>
+                <div id="tips"></div>
+                <!-- Call-to-Action -->
+                <section class="cta">
+                    <p>Improve your finances with <a href="https://example.com/financial-resources" target="_blank" rel="noopener">expert financial resources</a>!</p>
+                </section>
+            </main>
+            <footer>
+                <p>© 2025 Financial Health Checker by GameNeXT</p>
+            </footer>
+        </div>
+
+        <!-- Right Ad Space -->
+        <div class="ad-space ad-right">Advertisement Right</div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Currency List
+        const currencies = [
+            { code: "USD", symbol: "$" },
+            { code: "EUR", symbol: "€" },
+            { code: "GBP", symbol: "£" },
+            { code: "JPY", symbol: "¥" },
+            { code: "AUD", symbol: "A$" },
+            { code: "CAD", symbol: "C$" },
+            { code: "CHF", symbol: "Fr" },
+            { code: "CNY", symbol: "¥" },
+            { code: "INR", symbol: "₹" },
+            { code: "BRL", symbol: "R$" },
+            ...Array.from({ length: 50 }, (_, i) => ({
+                code: `CUR${i + 1}`,
+                symbol: `C${i + 1}`
+            }))
+        ];
+
+        // Populate Currency Dropdown
+        const currencyList = document.getElementById('currency-list');
+        currencies.forEach(currency => {
+            const li = document.createElement('li');
+            li.textContent = `${currency.code} - ${currency.symbol}`;
+            li.dataset.code = currency.code;
+            li.dataset.symbol = currency.symbol;
+            currencyList.appendChild(li);
+        });
+
+        // Dropdown Functionality
+        const currencyButton = document.getElementById('currency-button');
+        const currencyDropdown = document.getElementById('currency-dropdown');
+        const currencySearch = document.getElementById('currency-search');
+        const currencySelect = document.querySelector('.currency-select');
+        let selectedSymbol = '$';
+
+        currencyButton.addEventListener('click', () => {
+            currencyDropdown.classList.toggle('open');
+        });
+
+        currencySearch.addEventListener('input', () => {
+            const searchTerm = currencySearch.value.toLowerCase();
+            const items = currencyList.querySelectorAll('li');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+
+        currencyList.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                selectedSymbol = e.target.dataset.symbol;
+                currencyButton.textContent = `${e.target.dataset.code} - ${e.target.dataset.symbol}`;
+                currencyDropdown.classList.remove('open');
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!currencySelect.contains(e.target)) {
+                currencyDropdown.classList.remove('open');
+            }
+        });
+
+        // Improved Calculation Logic
+        const calculateButton = document.getElementById('calculate-button');
+        const resultDiv = document.getElementById('result');
+        const progressContainer = document.getElementById('progress-container');
+        const healthProgress = document.getElementById('health-progress');
+        const progressLabel = document.getElementById('progress-label');
+        const chartContainer = document.getElementById('chart-container');
+        const tipsDiv = document.getElementById('tips');
+        let healthChart;
+
+        calculateButton.addEventListener('click', () => {
+            const income = parseFloat(document.getElementById('income').value) || 0;
+            const expenses = parseFloat(document.getElementById('expenses').value) || 0;
+            const savings = parseFloat(document.getElementById('savings').value) || 0;
+            const debt = parseFloat(document.getElementById('debt').value) || 0;
+
+            if (income < 0 || expenses < 0 || savings < 0 || debt < 0) {
+                resultDiv.textContent = 'Please enter valid non-negative values.';
+                resultDiv.style.opacity = '0';
+                setTimeout(() => { resultDiv.style.opacity = '1'; }, 100);
+                progressContainer.style.display = 'none';
+                chartContainer.style.display = 'none';
+                tipsDiv.style.opacity = '0';
+                return;
+            }
+
+            // Calculate Ratios
+            const savingsToIncome = income > 0 ? (savings / income) * 100 : 0;
+            const expenseToIncome = income > 0 ? (expenses / income) * 100 : 100;
+            const debtToIncome = income > 0 ? (debt / (income * 12)) * 100 : 100; // Annualized DTI
+
+            // Calculate Score Components
+            let score = 0;
+
+            // Savings-to-Income (40 points max)
+            const savingsScore = savingsToIncome >= 20 ? 40 : (savingsToIncome / 20) * 40;
+            score += Math.max(0, Math.min(40, savingsScore));
+
+            // Expense-to-Income (30 points max)
+            const expenseScore = expenseToIncome <= 50 ? 30 : expenseToIncome >= 100 ? 0 : 30 * (1 - (expenseToIncome - 50) / 50);
+            score += Math.max(0, Math.min(30, expenseScore));
+
+            // Debt-to-Income (30 points max)
+            const debtScore = debtToIncome <= 10 ? 30 : debtToIncome >= 50 ? 0 : 30 * (1 - (debtToIncome - 10) / 40);
+            score += Math.max(0, Math.min(30, debtScore));
+
+            // Adjustments
+            if (savings >= 3 * expenses) score += 10; // Emergency fund bonus
+            if (expenses > income) score -= 20; // Negative cash flow penalty
+
+            // Clamp Score
+            score = Math.max(0, Math.min(100, score));
+
+            // Personalized Tips
+            let tips = [];
+            if (expenseToIncome > 70) {
+                tips.push(`Your expenses (${selectedSymbol}${expenses.toFixed(2)}) exceed 70% of your income (${selectedSymbol}${income.toFixed(2)}). Aim to reduce spending to below 50%.`);
+            }
+            if (savingsToIncome < 10) {
+                tips.push(`Your savings (${selectedSymbol}${savings.toFixed(2)}) are less than 10% of your income. Try to save at least ${selectedSymbol}${(income * 0.1).toFixed(2)} monthly.`);
+            }
+            if (debtToIncome > 36) {
+                tips.push(`Your debt-to-income ratio (${debtToIncome.toFixed(1)}%) is high. Focus on reducing debt below ${selectedSymbol}${(income * 12 * 0.36).toFixed(2)} annually.`);
+            }
+            if (savings < 3 * expenses) {
+                tips.push(`Build an emergency fund of at least ${selectedSymbol}${(3 * expenses).toFixed(2)} (3x your expenses).`);
+            }
+            if (tips.length === 0) {
+                tips.push("You're in great shape! Maintain your savings and keep debt low.");
+            }
+
+            // Display Results
+            resultDiv.style.opacity = '0';
+            setTimeout(() => {
+                resultDiv.textContent = `Financial Health Score: ${score.toFixed(1)}/100`;
+                resultDiv.style.opacity = '1';
+            }, 100);
+
+            // Progress Bar
+            progressContainer.style.display = 'block';
+            healthProgress.style.width = '0%';
+            setTimeout(() => {
+                healthProgress.style.width = `${score}%`;
+            }, 100);
+            progressLabel.textContent = `Health Rating: ${score.toFixed(1)}%`;
+
+            // Chart
+            chartContainer.style.display = 'block';
+            if (healthChart) healthChart.destroy();
+            const ctx = document.getElementById('health-chart').getContext('2d');
+            healthChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Income', 'Expenses', 'Savings', 'Debt'],
+                    datasets: [{
+                        label: `Amount (${selectedSymbol})`,
+                        data: [income, expenses, savings, debt],
+                        backgroundColor: ['#22c55e', '#3b82f6', '#22c55e', '#3b82f6'],
+                        borderColor: ['#16a34a', '#1e40af', '#16a34a', '#1e40af'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    animation: { duration: 1000, easing: 'easeInOutQuad' },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Tips
+            tipsDiv.style.opacity = '0';
+            setTimeout(() => {
+                tipsDiv.innerHTML = `<strong>Tips for Improvement:</strong><br>${tips.join('<br>')}`;
+                tipsDiv.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
